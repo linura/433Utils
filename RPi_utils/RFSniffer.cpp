@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 
         /* Create a connection */
         driver = get_driver_instance();
-        con = driver->connect(mysql_serveur, mysql_user, mysql_password);
+        con = driver->connect(mysql_server, mysql_user, mysql_password);
         /* Connect to the MySQL JEEDOM database */
         con->setSchema(mysql_database);
 
