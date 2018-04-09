@@ -12,7 +12,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>     
-     
+/*
+include for JEEDOM Test
+*/
+#include "mysql_connection.h"
+
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>
+
 RCSwitch mySwitch;
  
 
