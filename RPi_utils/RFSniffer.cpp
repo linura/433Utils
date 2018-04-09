@@ -32,7 +32,11 @@ int main(int argc, char *argv[]) {
      // Consult https://projects.drogon.net/raspberry-pi/wiringpi/pins/
      // for more information.
      int PIN = 4;
-     
+     string mysql_server = "tcp://127.0.0.1:3306";
+     string mysql_user = "root";
+     string mysql_password = "root";
+     string mysql_database = "test";
+  
      if(wiringPiSetup() == -1) {
        printf("wiringPiSetup failed, exiting...");
        return 0;
@@ -74,9 +78,9 @@ int main(int argc, char *argv[]) {
 
             /* Create a connection */
 /*            driver = get_driver_instance();
-            con = driver->connect("tcp://127.0.0.1:3306", "root", "root");
+            con = driver->connect(mysql_serveur, mysql_user, mysql_password);
             /* Connect to the MySQL test database */
-/*            con->setSchema("test");
+/*            con->setSchema(mysql_database);
 
             stmt = con->createStatement();
             res = stmt->executeQuery("SELECT 'Hello World!' AS _message");
