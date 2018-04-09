@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
      string mysql_user = "root";
      string mysql_password = "root";
      string mysql_database = "test";
-  
+  try{
      if(wiringPiSetup() == -1) {
        printf("wiringPiSetup failed, exiting...");
        return 0;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
      mySwitch = RCSwitch();
      if (pulseLength != 0) mySwitch.setPulseLength(pulseLength);
-     mySwitch.enableReceive(PIN);  // Receiver on interrupt 0 => that is pin #2
+     mySwitch.enableReceive(PIN);  // Receiver on interrupt 0 => that is pin #4
      
     
      while(1) {
@@ -61,42 +61,43 @@ int main(int argc, char *argv[]) {
         } else {    
    
           printf("Received %i\n", mySwitch.getReceivedValue() );
-        }
+        }      
+      
+        sql::Driver *driver;
+        sql::Connection *con;
+        sql::Statement *stmt;
+        sql::ResultSet *res;
+
+        /* Create a connection */
+        driver = get_driver_instance();
+        con = driver->connect(mysql_serveur, mysql_user, mysql_password);
+        /* Connect to the MySQL JEEDOM database */
+        con->setSchema(mysql_database);
+
+        stmt = con->createStatement();
+        
+        switch(mySwitch.getReceivedValue()){
+          case:1
+            res = stmt->executeQuery("UPDATE 'datastore' SET 'value' = '1' WHERE 'datastore'.'id' = 39");
+            break();
+          case:2
+            res = stmt->executeQuery("UPDATE 'datastore' SET 'value' = '1' WHERE 'datastore'.'id' = 40");
+            break();
+          default:  
+            break;
+        }   
+        
+        delete res;
+        delete stmt;
+        delete con;
+        mySwitch.resetAvailable();  
+      }  
+       
+      sleep(10);
+  
+  }
     
-        mySwitch.resetAvailable();
-    
-      }
-       /*
-       if code reçus modification de la variable dans la base de donnée pour lancer le scenario
-       */
-      /*
-      try {
-            sql::Driver *driver;
-            sql::Connection *con;
-            sql::Statement *stmt;
-            sql::ResultSet *res;
-
-            /* Create a connection */
-/*            driver = get_driver_instance();
-            con = driver->connect(mysql_serveur, mysql_user, mysql_password);
-            /* Connect to the MySQL test database */
-/*            con->setSchema(mysql_database);
-
-            stmt = con->createStatement();
-            res = stmt->executeQuery("SELECT 'Hello World!' AS _message");
-            while (res->next()) {
-              cout << "\t... MySQL replies: ";
-              /* Access column data by alias or column name */
-/*              cout << res->getString("_message") << endl;
-              cout << "\t... MySQL says it again: ";
-              /* Access column data by numeric offset, 1 is the first column */
-/*              cout << res->getString(1) << endl;
-            }
-            delete res;
-            delete stmt;
-            delete con;
-
-        } catch (sql::SQLException &e) {
+  } catch (sql::SQLException &e) {
           cout << "# ERR: SQLException in " << __FILE__;
           cout << "(" << __FUNCTION__ << ") on line " »
                << __LINE__ << endl;
@@ -104,11 +105,6 @@ int main(int argc, char *argv[]) {
           cout << " (MySQL error code: " << e.getErrorCode();
           cout << ", SQLState: " << e.getSQLState() << " )" << endl;
         }
-       */
-      sleep(10);
-  
-  }
-
   exit(0);
 
 
